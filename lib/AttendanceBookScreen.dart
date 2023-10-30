@@ -101,7 +101,11 @@ class _AttendanceBookScreenState extends State<AttendanceBookScreen> {
         itemCount: attendance.length,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => clearAttendanceBook(),
+        onPressed: () {
+          clearAttendanceBook();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
         backgroundColor: Colors.blueAccent,
         foregroundColor: Colors.white,
         tooltip: 'Clear Attendance Book',

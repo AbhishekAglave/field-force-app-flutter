@@ -11,8 +11,9 @@ class AttendanceScreen extends StatefulWidget {
 
 class _AttendanceScreenState extends State<AttendanceScreen> {
   Attendance todaysAttendance =
-      Attendance(DateTime.now(), DateTime.now(), 0, 0, true);
+      Attendance(DateTime.now(), DateTime.now(), 0, 0, true, '');
   bool foundTodaysAttendance = false;
+  TextEditingController commentsController = TextEditingController();
   List<Attendance> attendance = [];
 
   @override
@@ -51,8 +52,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       return;
     }
 
-    final newAttendance =
-        Attendance(DateTime.now(), DateTime.now(), 72.65891, 45.679846, false);
+    final newAttendance = Attendance(DateTime.now(), DateTime.now(), 72.65891,
+        45.679846, false, commentsController.text);
 
     setState(() {
       attendance.insert(0, newAttendance);
@@ -150,7 +151,60 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => markAttendance(),
+                  onTap: () => {
+                    showModalBottomSheet(
+                      context: context,
+                      showDragHandle: true,
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                          height: 200,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Are you sure?',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(14),
+                                  child: TextField(
+                                    controller: commentsController,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.blueAccent),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(14))),
+                                      labelText: 'Any Comments ( Optional )',
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(14),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        minimumSize: const Size.fromHeight(50),
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Colors.blueAccent),
+                                    child: Text(foundTodaysAttendance
+                                        ? "End My Day"
+                                        : "Start My Day"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      markAttendance();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  },
                   borderRadius: const BorderRadius.all(Radius.circular(70)),
                   child: Center(
                     child: Text(
