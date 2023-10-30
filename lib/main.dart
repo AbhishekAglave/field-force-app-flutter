@@ -1,4 +1,5 @@
 import 'package:fieldforce/AttendanceScreen.dart';
+import 'package:fieldforce/OtherScreen.dart';
 import 'package:fieldforce/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -32,13 +33,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  BoxDecoration cardStyle = const BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-      boxShadow: [BoxShadow(blurRadius: 8, color: Colors.black26)]);
-
   User user =
       User("Abhishek", "Full Stack Developer", "assets/images/profilepic.jpg");
+
+  Container card(Widget child, StatefulWidget screenToNavigate) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        boxShadow: [BoxShadow(blurRadius: 8, color: Colors.black26)],
+      ),
+      child: Material(
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        child: InkWell(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          onTap: () => Navigator.push(
+              context,
+              PageTransition(
+                  child: screenToNavigate,
+                  type: PageTransitionType.rightToLeftWithFade)),
+          child: child,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,15 +199,8 @@ class _MyHomePageState extends State<MyHomePage> {
               crossAxisSpacing: 20,
               padding: const EdgeInsets.all(18),
               children: [
-                InkWell(
-                  onTap: () => Navigator.push(
-                      context,
-                      PageTransition(
-                          child: AttendanceScreen(),
-                          type: PageTransitionType.rightToLeftWithFade)),
-                  child: Container(
-                    decoration: cardStyle,
-                    child: Center(
+                card(
+                    Center(
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -209,38 +220,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ],
                     )),
-                  ),
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
-                Container(
-                  decoration: cardStyle,
-                ),
+                    AttendanceScreen()),
+                card(Container(), OtherScreen()),
+                card(Container(), OtherScreen()),
+                card(Container(), OtherScreen()),
+                card(Container(), OtherScreen()),
+                card(Container(), OtherScreen()),
+                card(Container(), OtherScreen()),
+                card(Container(), OtherScreen()),
+                card(Container(), OtherScreen()),
               ],
             ))
           ],

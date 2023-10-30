@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:fieldforce/AttendanceBookScreen.dart';
 import 'package:fieldforce/models/Attendance.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AttendanceScreen extends StatefulWidget {
   @override
@@ -10,28 +10,74 @@ class AttendanceScreen extends StatefulWidget {
 }
 
 class _AttendanceScreenState extends State<AttendanceScreen> {
+  Attendance todaysAttendance =
+      Attendance(DateTime.now(), DateTime.now(), 0, 0, true);
+  bool foundTodaysAttendance = false;
+  List<Attendance> attendance = [];
+
   @override
   void initState() {
     super.initState();
+    getAttendanceBook();
   }
 
-  List<Attendance> attendance = [];
+  getAttendanceBook() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> stringAttendance = prefs.getStringList("attendancebook") ?? [];
+
+    attendance = stringAttendance
+        .map((csvString) => Attendance.fromCsvString(csvString))
+        .toList();
+
+    getTodaysAttendance(attendance);
+  }
 
   void markAttendance() async {
-    final newAttendance = Attendance(
-      DateTime.now(),
-      DateTime.now().add(const Duration(days: 0, minutes: 5)),
-      72.65891,
-      45.679846,
-    );
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    getTodaysAttendance(attendance);
+
+    if (foundTodaysAttendance) {
+      todaysAttendance.endDateTime = DateTime.now();
+      todaysAttendance.isEnded = true;
+      setState(() {
+        attendance.removeAt(0);
+        attendance.insert(0, todaysAttendance);
+        foundTodaysAttendance = false;
+      });
+      prefs.setStringList("attendancebook",
+          attendance.map((attendance) => attendance.toCsvString()).toList());
+      getTodaysAttendance(attendance);
+      return;
+    }
+
+    final newAttendance =
+        Attendance(DateTime.now(), DateTime.now(), 72.65891, 45.679846, false);
 
     setState(() {
-      attendance.add(newAttendance);
+      attendance.insert(0, newAttendance);
     });
 
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.setStringList("attendancebook",
-    //     attendance.map((attendance) => attendance.toCsvString()).toList());
+    prefs.setStringList("attendancebook",
+        attendance.map((attendance) => attendance.toCsvString()).toList());
+    getTodaysAttendance(attendance);
+  }
+
+  getTodaysAttendance(List<Attendance> attendance) {
+    DateTime today = DateTime.now();
+    today = DateTime(today.year, today.month, today.day);
+
+    for (Attendance element in attendance) {
+      DateTime elementDate = DateTime(element.startDateTime.year,
+          element.startDateTime.month, element.startDateTime.day);
+      if (elementDate == today && !element.isEnded) {
+        setState(() {
+          todaysAttendance = element;
+          foundTodaysAttendance = true;
+        });
+        return;
+      }
+    }
   }
 
   @override
@@ -57,64 +103,69 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               color: Colors.white, fontWeight: FontWeight.w500, fontSize: 20),
         ),
       ),
-      body: InkWell(
-        onTap: () => markAttendance(),
-        child: Center(
-          child: Stack(children: [
-            Center(
-              child: Container(
-                width: 220,
-                height: 220,
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(5, 68, 137, 255),
-                    shape: BoxShape.circle),
+      body: Center(
+        child: Stack(children: [
+          Center(
+            child: Container(
+              width: 220,
+              height: 220,
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(5, 68, 137, 255),
+                  shape: BoxShape.circle),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(10, 68, 137, 255),
+                  shape: BoxShape.circle),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: 180,
+              height: 180,
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(15, 68, 137, 255),
+                  shape: BoxShape.circle),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: 160,
+              height: 160,
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(20, 68, 137, 255),
+                  shape: BoxShape.circle),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: 140,
+              height: 140,
+              decoration: const BoxDecoration(
+                  color: Colors.blueAccent, shape: BoxShape.circle),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => markAttendance(),
+                  borderRadius: const BorderRadius.all(Radius.circular(70)),
+                  child: Center(
+                    child: Text(
+                      foundTodaysAttendance ? "End" : "Start",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 28),
+                    ),
+                  ),
+                ),
               ),
             ),
-            Center(
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(10, 68, 137, 255),
-                    shape: BoxShape.circle),
-              ),
-            ),
-            Center(
-              child: Container(
-                width: 180,
-                height: 180,
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(15, 68, 137, 255),
-                    shape: BoxShape.circle),
-              ),
-            ),
-            Center(
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(20, 68, 137, 255),
-                    shape: BoxShape.circle),
-              ),
-            ),
-            Center(
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: const BoxDecoration(
-                    color: Colors.blueAccent, shape: BoxShape.circle),
-              ),
-            ),
-            const Center(
-                child: Text(
-              "Start",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 28),
-            )),
-          ]),
-        ),
+          ),
+        ]),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
