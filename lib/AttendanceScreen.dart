@@ -155,50 +155,60 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                     showModalBottomSheet(
                       context: context,
                       showDragHandle: true,
+                      isScrollControlled: true,
                       builder: (BuildContext context) {
-                        return SizedBox(
-                          height: 200,
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Are you sure?',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(14),
-                                  child: TextField(
-                                    controller: commentsController,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.blueAccent),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(14))),
-                                      labelText: 'Any Comments ( Optional )',
+                        return Padding(
+                          padding: MediaQuery.of(context).viewInsets,
+                          child: SizedBox(
+                            height: 220,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(bottom: 8),
+                                    child: Text(
+                                      'Are you sure?',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(14),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: const Size.fromHeight(50),
-                                        foregroundColor: Colors.white,
-                                        backgroundColor: Colors.blueAccent),
-                                    child: Text(foundTodaysAttendance
-                                        ? "End My Day"
-                                        : "Start My Day"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      markAttendance();
-                                    },
+                                  Padding(
+                                    padding: const EdgeInsets.all(14),
+                                    child: TextField(
+                                      controller: commentsController,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.blueAccent),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(14))),
+                                        labelText: 'Any Comments ( Optional )',
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(14),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          minimumSize:
+                                              const Size.fromHeight(50),
+                                          foregroundColor: Colors.white,
+                                          backgroundColor: Colors.blueAccent),
+                                      child: Text(foundTodaysAttendance
+                                          ? "End My Day"
+                                          : "Start My Day"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        markAttendance();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
