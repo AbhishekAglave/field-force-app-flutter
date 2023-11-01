@@ -134,9 +134,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ListTile(
                 title: const Text('Attendance'),
+                leading: const Icon(
+                  Icons.checklist_rounded,
+                ),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
                   Navigator.pop(context);
                   Navigator.push(
                       context,
