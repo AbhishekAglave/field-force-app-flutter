@@ -314,10 +314,11 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
-            context,
-            PageTransition(
-                child: AttendanceBookScreen(),
-                type: PageTransitionType.rightToLeftWithFade)),
+          context,
+          PageTransition(
+              child: AttendanceBookScreen(),
+              type: PageTransitionType.rightToLeftWithFade),
+        ),
         backgroundColor: Colors.blueAccent,
         foregroundColor: Colors.white,
         tooltip: 'Attendance Book',

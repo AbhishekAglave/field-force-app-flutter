@@ -1,5 +1,6 @@
 import 'package:fieldforce/AttendanceScreen.dart';
 import 'package:fieldforce/OtherScreen.dart';
+import 'package:fieldforce/SplashScreen.dart';
 import 'package:fieldforce/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -16,10 +17,11 @@ class MyApp extends StatelessWidget {
       title: 'Field Force',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade50),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Field Force'),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade50),
+          useMaterial3: true,
+          fontFamily: "Satoshi-Regular"),
+      // home: const MyHomePage(title: 'Field Force'),
+      home: SplashScreen(),
     );
   }
 }
